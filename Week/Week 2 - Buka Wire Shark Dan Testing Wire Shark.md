@@ -17,7 +17,7 @@ Jika sudah klik start, maka akan muncul tampilan seperti ini
 <img src="../Assets/WireSharkDashboardStart.png" alt="WireShark Start Capture"/>
 
 ### Langkah 3: Akses Website
-Setelah itu, buka browser dan akses website ...
+Setelah itu, buka browser dan akses website [http://gaia.cs.umass.edu/wireshark-labs/HTTP-wireshark-file1.html](http://gaia.cs.umass.edu/wireshark-labs/HTTP-wireshark-file1.html)
 <img src="../Assets/WireSharkBrowserTest.png" alt="WireShark Capture"/>
 
 ### Langkah 4: Stop Capture
