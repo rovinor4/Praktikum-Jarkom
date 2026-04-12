@@ -61,46 +61,122 @@ server tersebut?
 
 ### 4.4.1 Tracing DNS dengan Wireshark
 1. Cari pesan permintaan DNS dan balasannya. Apakah pesan tersebut dikirimkan melalui UDP
-atau TCP?
+atau TCP? <br/>
+   **Jawaban :** <br/>
+   Pesan DNS dikirimkan melalui **UDP**.
+   ![Screenshot Soal 4.2.2](../Assets/week4/modul4/sc_soal_4.4.1.1.avif)
+   Bukti:
+   - Terlihat pada detail paket terdapat **User Datagram Protocol**
+   - Port tujuan DNS adalah **53 (UDP)**
 1. Apa port tujuan pada pesan permintaan DNS? Apa port sumber pada pesan balasannya?
       Pada pesan permintaan DNS, apa alamat IP tujuannya? Apa alamat IP server DNS lokal anda
       (gunakan ipconfig untuk mencari tahu)? Apakah kedua alamat IP tersebut sama?
+   <br/>
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.1.2.avif)
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_pj1.avif)
+   **Jawaban :** <br/>
+   - Port tujuan DNS (request): **53**
+   - Port sumber (response): **53**
+   - Alamat IP tujuan (request): **68.87.71.226**
+   - Alamat IP DNS lokal: **172.20.10.1**
+   - Apakah sama: **Tidak sama**
 1. Periksa pesan permintaan DNS. Apa “jenis” atau ”type” dari pesan tersebut? Apakah pesan
    permintaan tersebut mengandung ”jawaban” atau ”answers”?
+   <br/>
+   **Jawaban :** <br/>
+   - Type: A (Host Address)
+   - Answers: Ada (1)
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.1.3.avif)
+   Bukti:
+   - Field "Answer RRs: 1" pada DNS response
 1. Periksa pesan balasan DNS. Berapa banyak ”jawaban” atau ”answers” yang terdapat di
    dalamnya? Apa saja isi yang terkandung dalam setiap jawaban tersebut?
+   <br/>
+   **Jawaban :** <br/>
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.1.4.avif)
 1. Perhatikan paket TCP SYN yang selanjutnya dikirimkan oleh host Anda. Apakah alamat IP
    pada paket tersebut sesuai dengan alamat IP yang tertera pada pesan balasan DNS?
+   <br/>
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.1.5.avif)
+   **Jawaban :** <br/>Ya, sesuai.
+   Alamat IP pada paket TCP SYN adalah **128.119.245.12**, sama dengan alamat IP yang diberikan pada balasan DNS.
 1. Halaman web yang sebelumnya anda akses (http://www.ietf.org) memuat beberapa
    gambar. Apakah host Anda perlu mengirimkan pesan permintaan DNS baru setiap kali ingin
    mengakses suatu gambar?
+   <br/>
+   **Jawaban :** <br/>Tidak.
+   Host tidak perlu mengirim permintaan DNS baru setiap kali mengakses gambar, karena alamat IP sudah disimpan (cache) dari hasil query sebelumnya.
 
 ### 4.4.2 Tracing DNS dengan Wireshark
-1. Apa port tujuan pada pesan permintaan DNS? Apa port sumber pada pesan balasan DNS?
+![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.2.1.avif)
+1. Apa port tujuan pada pesan permintaan DNS? Apa port sumber pada pesan balasan DNS?<br/>
+   **Jawaban :**
+   - Port tujuan (request): **53**
+   - Port sumber (response): **53**
 2. Ke alamat IP manakah pesan permintaan DNS dikirimkan? Apakah alamat IP tersebut
-   merupakan default alamat IP server DNS lokal Anda?
+   merupakan default alamat IP server DNS lokal Anda?<br/>
+   **Jawaban :**
+   - Alamat IP tujuan (request): **68.87.71.226**
+   - Apakah sama dengan DNS lokal: **Ya**
 3. Periksa pesan permintaan DNS. Apa ”jenis” atau ”type” dari pesan tersebut? Apakah pesan
    tersebut mengandung ”jawaban” atau ”answers”?
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.2.2.avif)
+   - Type: A (Host Address)
+   - Answers: Tidak ada (0)
 4. Periksa pesan balasan DNS. Berapa banyak ”jawaban” atau “answers” yang terdapat di
    dalamnya. Apa saja isi yang terkandung dalam setiap jawaban tersebut?
-5. Sertakan hasil tangkapan layar.
+   - Jumlah answers: 1
+   - Isi:
+      - Name: www.mit.edu
+      - Type: A (Host Address)
+      - Address (IP): 18.7.22.83
+      - TTL: 60 detik
 
-
-### 4.4.2 Tracing DNS dengan Wireshark
-1. Ke alamat IP manakah pesan permintaan DNS dikirimkan? Apakah alamat IP tersebut
-   merupakan default alamat IP server DNS lokal Anda?
-1. Periksa pesan permintaan DNS. Apa ”jenis” atau ”type” dari pesan tersebut? Apakah pesan
-   tersebut mengandung ”jawaban” atau ”answers”?
-1. Periksa pesan balasan DNS. Apa nama server MIT yang diberikan oleh pesan balasan?
-   Apakah pesan balasan ini juga memberikan alamat IP untuk server MIT tersebut?
-   JARINGAN KOMPUTER 28
-1. Sertakan hasil tangkapan layar.
 
 ### 4.4.3 Tracing DNS dengan Wireshark
 1. Ke alamat IP manakah pesan permintaan DNS dikirimkan? Apakah alamat IP tersebut
    merupakan default alamat IP server DNS lokal Anda?
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.3.1.avif)
+   - Alamat IP tujuan DNS: **23.51.133.101**
+   - Apakah sama dengan DNS lokal: **Tidak sama**
 1. Periksa pesan permintaan DNS. Apa ”jenis” atau ”type” dari pesan tersebut? Apakah pesan
    tersebut mengandung ”jawaban” atau ”answers”?
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.3.2.avif)
+   - Type: A (Host Address)
+   - Answers: 1
+1. Periksa pesan balasan DNS. Apa nama server MIT yang diberikan oleh pesan balasan?
+   Apakah pesan balasan ini juga memberikan alamat IP untuk server MIT tersebut?
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.3.2.avif)
+   - Nama server MIT: mit.edu
+   - Apakah ada alamat IP: Ya, ada (23.51.133.101)
+
+### 4.4.4 Tracing DNS dengan Wireshark
+1. Ke alamat IP manakah pesan permintaan DNS dikirimkan? Apakah alamat IP tersebut
+   merupakan default alamat IP server DNS lokal Anda?
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.4.1.avif)
+   - Alamat IP tujuan DNS: **192.168.18.1**
+   - Apakah sama dengan DNS lokal: **Ya**
+1. Periksa pesan permintaan DNS. Apa ”jenis” atau ”type” dari pesan tersebut? Apakah pesan
+   tersebut mengandung ”jawaban” atau ”answers”?
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.4.2(3).avif)
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.4.2(4).avif)
+   - Type: A (Host Address)
+   - Answers: Tidak ada (0)
 1. Periksa pesan balasan DNS. Berapa banyak ”jawaban” atau “answers” yang terdapat di
    dalamnya. Apa saja isi yang terkandung dalam setiap jawaban tersebut?
-1. Sertakan hasil tangkapan layar.
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.4.2.avif)
+   ![Screenshot Contoh ifconfig -a](../Assets/week4/modul4/sc_soal_4.4.4.2(2).avif)
+   Response 1:
+   - Jumlah answers: 1
+   - Isi:
+      - Name: bitsy.mit.edu
+      - Type: A (Host Address)
+      - Address: 18.0.72.3
+
+   Response 2:
+   - Jumlah answers: 2
+   - Isi:
+      - Name: www.aiit.or.kr
+         - Address: 172.67.152.120
+      - Name: www.aiit.or.kr
+         - Address: 104.21.74.8
