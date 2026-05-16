@@ -1,3 +1,4 @@
+![Tugas Praktikum Jaringan Komputer](./image.avif)
 # Tugas Praktikum Jaringan Komputer
 
 Nama : Rovino Ramadhani  
