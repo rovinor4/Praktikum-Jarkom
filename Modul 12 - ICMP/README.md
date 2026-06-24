@@ -6,13 +6,6 @@ Kelas : IF-04-01
 
 ---
 
-## Struktur Folder
-
-1. `asset/` berisi screenshot ping, traceroute, dan detail paket ICMP.
-2. `code/icmp_pinger.py` berisi program ICMP Pinger sederhana.
-3. `LIST_IMAGE.md` berisi daftar gambar yang perlu diganti dengan screenshot asli.
-
----
 
 ## Tujuan Praktikum
 
@@ -25,7 +18,9 @@ Bagian asistensi tugas besar diabaikan sesuai instruksi.
 
 ## Pengantar
 
-ICMP digunakan untuk mengirim pesan kontrol dan pesan kesalahan pada jaringan IP. Pada modul ini, ICMP diamati melalui perintah ping dan traceroute. Ping menghasilkan pesan ICMP Echo Request dan Echo Reply, sedangkan traceroute memanfaatkan pesan ICMP TTL exceeded dari router perantara.
+ICMP digunakan untuk mengirim pesan kontrol dan pesan kesalahan pada jaringan IP. Pada modul ini, ICMP diamati melalui
+perintah ping dan traceroute. Ping menghasilkan pesan ICMP Echo Request dan Echo Reply, sedangkan traceroute
+memanfaatkan pesan ICMP TTL exceeded dari router perantara.
 
 ---
 
@@ -107,58 +102,44 @@ Program ini membutuhkan hak akses administrator karena raw socket ICMP biasanya 
 
 ## Output / Hasil Percobaan
 
-### Output ping di terminal
-
-![Output ping](asset/01-output-ping.avif)
-
-### Paket ICMP hasil ping di Wireshark
-
-![ICMP ping Wireshark](asset/02-icmp-ping-wireshark.avif)
-
-### Detail ICMP Echo Request
-
-![ICMP Echo Request](asset/03-icmp-echo-request.avif)
-
-### Output traceroute di terminal
-
-![Output traceroute](asset/04-output-traceroute.avif)
-
-### Detail ICMP TTL exceeded
-
-![ICMP TTL exceeded](asset/05-icmp-ttl-exceeded.avif)
-
-### Output program ICMP Pinger Python
-
-![Python ICMP Pinger](asset/06-python-icmp-pinger.avif)
+![Output traceroute](asset/01-output-ping.avif)
 
 ---
 
 ## Analisis ICMP Ping
 
-| No | Komponen | Hasil Analisis |
-| --- | --- | --- |
-| 1 | Jumlah Echo Request | [isi dari Wireshark] |
-| 2 | Jumlah Echo Reply | [isi dari Wireshark] |
-| 3 | Type dan Code Echo Request | [isi dari Wireshark] |
-| 4 | Type dan Code Echo Reply | [isi dari Wireshark] |
-| 5 | Identifier | [isi dari Wireshark] |
-| 6 | Sequence number | [isi dari Wireshark] |
-| 7 | Rata-rata RTT | [isi dari terminal / Wireshark] |
+File pcap yang dikirim tidak memuat ICMP Echo Request dan Echo Reply dari percobaan ping. ICMP yang ditemukan adalah
+`Destination unreachable, Port unreachable` pada `NAT_home_side.pcap` paket 49 dan `NAT_ISP_side.pcap` paket 53.
+
+| No | Komponen                   | Hasil Analisis                                                        |
+|----|----------------------------|-----------------------------------------------------------------------|
+| 1  | Jumlah Echo Request        | `0`, tidak ditemukan pada pcap yang dikirim.                          |
+| 2  | Jumlah Echo Reply          | `0`, tidak ditemukan pada pcap yang dikirim.                          |
+| 3  | Type dan Code Echo Request | Tidak tersedia.                                                       |
+| 4  | Type dan Code Echo Reply   | Tidak tersedia.                                                       |
+| 5  | Identifier                 | Tidak tersedia.                                                       |
+| 6  | Sequence number            | Tidak tersedia.                                                       |
+| 7  | Rata-rata RTT              | Tidak tersedia karena tidak ada pasangan Echo Request dan Echo Reply. |
 
 ---
 
 ## Analisis ICMP Traceroute
 
-| Hop | IP Router | ICMP Type | ICMP Code | RTT | Keterangan |
-| --- | --- | --- | --- | --- | --- |
-| 1 | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 2 | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 3 | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 4 | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 5 | [isi] | [isi] | [isi] | [isi] | [isi] |
+Tidak ditemukan pesan ICMP TTL exceeded dari traceroute pada pcap yang dikirim. Tabel berikut mencatat ICMP yang
+tersedia sebagai pembanding.
+
+| Hop | IP Router        | ICMP Type       | ICMP Code       | RTT            | Keterangan                                                                      |
+|-----|------------------|-----------------|-----------------|----------------|---------------------------------------------------------------------------------|
+| 1   | `69.183.241.120` | `3`             | `3`             | Tidak tersedia | `Destination unreachable, Port unreachable` pada `NAT_home_side.pcap` paket 49. |
+| 2   | Tidak ditemukan  | Tidak ditemukan | Tidak ditemukan | Tidak tersedia | Tidak ada ICMP TTL exceeded.                                                    |
+| 3   | Tidak ditemukan  | Tidak ditemukan | Tidak ditemukan | Tidak tersedia | Tidak ada ICMP TTL exceeded.                                                    |
+| 4   | Tidak ditemukan  | Tidak ditemukan | Tidak ditemukan | Tidak tersedia | Tidak ada ICMP TTL exceeded.                                                    |
+| 5   | Tidak ditemukan  | Tidak ditemukan | Tidak ditemukan | Tidak tersedia | Tidak ada ICMP TTL exceeded.                                                    |
 
 ---
 
 ## Kesimpulan
 
-ICMP membantu proses diagnosis jaringan. Ping menggunakan Echo Request dan Echo Reply untuk menguji apakah host tujuan dapat dijangkau. Traceroute menggunakan perubahan TTL untuk mengetahui router yang dilewati paket menuju tujuan. Program ICMP Pinger menunjukkan bahwa konsep ping dapat dibuat sendiri dengan raw socket.
+ICMP membantu proses diagnosis jaringan. Ping menggunakan Echo Request dan Echo Reply untuk menguji apakah host tujuan
+dapat dijangkau. Traceroute menggunakan perubahan TTL untuk mengetahui router yang dilewati paket menuju tujuan. Program
+ICMP Pinger menunjukkan bahwa konsep ping dapat dibuat sendiri dengan raw socket.

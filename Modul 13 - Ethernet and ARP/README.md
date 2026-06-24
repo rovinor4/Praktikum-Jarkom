@@ -6,12 +6,6 @@ Kelas : IF-04-01
 
 ---
 
-## Struktur Folder
-
-1. `asset/` berisi screenshot frame Ethernet, ARP cache, dan paket ARP.
-2. `LIST_IMAGE.md` berisi daftar gambar dan instruksi screenshot.
-
----
 
 ## Tujuan Praktikum
 
@@ -115,40 +109,46 @@ arp
 
 ## Analisis Frame Ethernet
 
+Sumber data yang dipakai adalah `NAT_home_side.pcap`. Paket HTTP GET yang dianalisis adalah paket 20.
+
 | No | Komponen | Hasil Analisis |
 | --- | --- | --- |
-| 1 | Destination MAC address | [isi dari Wireshark] |
-| 2 | Source MAC address | [isi dari Wireshark] |
-| 3 | Type field | [isi dari Wireshark] |
-| 4 | Protokol lapisan atas yang dibawa | [isi dari Wireshark] |
-| 5 | Panjang frame | [isi dari Wireshark] |
-| 6 | Nomor paket HTTP GET | [isi dari Wireshark] |
+| 1 | Destination MAC address | `00:22:6b:45:1f:1b` |
+| 2 | Source MAC address | `00:22:68:0d:ca:8f` |
+| 3 | Type field | `0x0800` atau IPv4. |
+| 4 | Protokol lapisan atas yang dibawa | HTTP di atas TCP di atas IPv4. |
+| 5 | Panjang frame | `767 byte` |
+| 6 | Nomor paket HTTP GET | Paket `20`, request `GET /safebrowsing/rd/goog-malware-shavar_s_15361-15365.15361-15365.: HTTP/1.1`. |
 
 ---
 
 ## Analisis ARP Cache
 
+Data ARP cache terminal tidak dapat diambil dari pcap, sehingga bagian ini tetap perlu diisi dari output terminal perangkat yang digunakan saat praktikum.
+
 | No | Komponen | Hasil Analisis |
 | --- | --- | --- |
-| 1 | Jumlah entri ARP cache sebelum dihapus | [isi dari terminal] |
-| 2 | Gateway / router lokal yang muncul di ARP cache | [isi dari terminal] |
-| 3 | MAC address gateway | [isi dari terminal] |
-| 4 | Kondisi ARP cache setelah dihapus | [isi dari terminal] |
+| 1 | Jumlah entri ARP cache sebelum dihapus | Tidak tersedia dari pcap. Jalankan `arp -a` di terminal. |
+| 2 | Gateway / router lokal yang muncul di ARP cache | Tidak tersedia dari pcap. Pada trace, router lokal yang terlihat adalah `192.168.1.1`. |
+| 3 | MAC address gateway | Tidak tersedia dari pcap terminal. Pada paket ARP, MAC router adalah `00:22:6b:45:1f:1b`. |
+| 4 | Kondisi ARP cache setelah dihapus | Tidak tersedia dari pcap. Perlu screenshot terminal setelah cache dihapus. |
 
 ---
 
 ## Analisis Paket ARP
 
+Sumber data yang dipakai adalah `NAT_home_side.pcap`, paket 8 dan 9.
+
 | No | Komponen ARP | ARP Request | ARP Reply |
 | --- | --- | --- | --- |
-| 1 | Opcode | [isi] | [isi] |
-| 2 | Sender MAC address | [isi] | [isi] |
-| 3 | Sender IP address | [isi] | [isi] |
-| 4 | Target MAC address | [isi] | [isi] |
-| 5 | Target IP address | [isi] | [isi] |
-| 6 | Destination MAC pada Ethernet | [isi] | [isi] |
+| 1 | Opcode | `1` atau request. | `2` atau reply. |
+| 2 | Sender MAC address | `00:22:6b:45:1f:1b` | `00:22:68:0d:ca:8f` |
+| 3 | Sender IP address | `192.168.1.1` | `192.168.1.100` |
+| 4 | Target MAC address | `00:00:00:00:00:00` | `00:22:6b:45:1f:1b` |
+| 5 | Target IP address | `192.168.1.100` | `192.168.1.1` |
+| 6 | Destination MAC pada Ethernet | `00:22:68:0d:ca:8f` | `00:22:6b:45:1f:1b` |
 
-ARP Request biasanya dikirim secara broadcast karena host belum mengetahui MAC address tujuan. ARP Reply dikirim kembali secara unicast karena penerima sudah mengetahui alamat MAC pengirim request.
+Secara umum, ARP Request sering dikirim secara broadcast ketika host belum mengetahui MAC address tujuan. Namun, pada trace ini ARP Request terlihat sebagai unicast ke `00:22:68:0d:ca:8f`, sehingga kemungkinan perangkat pengirim sudah mengetahui MAC tujuan dari cache sebelumnya.
 
 ---
 

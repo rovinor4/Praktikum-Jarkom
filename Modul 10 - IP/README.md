@@ -6,12 +6,6 @@ Kelas : IF-04-01
 
 ---
 
-## Struktur Folder
-
-1. `asset/` berisi screenshot Wireshark untuk IPv4, fragmentasi, dan IPv6.
-2. `LIST_IMAGE.md` berisi daftar gambar dan instruksi screenshot.
-
----
 
 ## Tujuan Praktikum
 
@@ -21,7 +15,9 @@ Mahasiswa dapat menginvestigasi cara kerja protokol IP menggunakan Wireshark.
 
 ## Pengantar
 
-Modul IP membahas datagram IPv4, proses traceroute, fragmentasi IP, dan contoh paket IPv6. Traceroute digunakan karena setiap paket memiliki nilai TTL yang berbeda. Ketika TTL habis di router, router akan mengirim pesan ICMP TTL exceeded kembali ke host asal.
+Modul IP membahas datagram IPv4, proses traceroute, fragmentasi IP, dan contoh paket IPv6. Traceroute digunakan karena
+setiap paket memiliki nilai TTL yang berbeda. Ketika TTL habis di router, router akan mengirim pesan ICMP TTL exceeded
+kembali ke host asal.
 
 ---
 
@@ -72,7 +68,8 @@ http://gaia.cs.umass.edu/wireshark-labs/wireshark-traces.zip
 
 1. Buka file trace `ip-wireshark-trace2-1.pcapng`.
 2. Amati paket DNS AAAA untuk domain `youtube.com`.
-3. Perhatikan perbedaan field IPv6 dibanding IPv4, seperti `Traffic Class`, `Flow Label`, `Payload Length`, `Next Header`, dan `Hop Limit`.
+3. Perhatikan perbedaan field IPv6 dibanding IPv4, seperti `Traffic Class`, `Flow Label`, `Payload Length`,
+   `Next Header`, dan `Hop Limit`.
 
 ---
 
@@ -86,62 +83,66 @@ http://gaia.cs.umass.edu/wireshark-labs/wireshark-traces.zip
 
 ![Filter UDP client server](asset/02-filter-udp-client-server.avif)
 
-### Analisis fragmentasi IPv4
-
-![Fragmentasi IPv4](asset/03-fragmentasi-ipv4.avif)
-
 ### Tampilan trace IPv6
 
 ![Trace IPv6](asset/04-trace-ipv6.avif)
-
-### Paket DNS AAAA dalam IPv6
-
-![DNS AAAA IPv6](asset/05-dns-aaaa-ipv6.avif)
 
 ---
 
 ## Analisis IPv4 Dasar
 
-| No | Komponen | Hasil Analisis |
-| --- | --- | --- |
-| 1 | Alamat IP sumber | [isi dari Wireshark] |
-| 2 | Alamat IP tujuan | [isi dari Wireshark] |
-| 3 | Nilai TTL awal yang diamati | [isi dari Wireshark] |
-| 4 | Protocol pada header IP | [isi dari Wireshark] |
-| 5 | Header length IPv4 | [isi dari Wireshark] |
-| 6 | Total length datagram | [isi dari Wireshark] |
-| 7 | Identification | [isi dari Wireshark] |
-| 8 | Router yang mengirim ICMP TTL exceeded | [isi dari Wireshark] |
+Sumber data yang dipakai adalah `udp-wireshark-trace.pcap`, terutama paket 7 yang berisi DNS query `www.mit.edu` melalui
+UDP. File yang dikirim tidak memuat trace traceroute lengkap, sehingga bagian ICMP TTL exceeded tidak ditemukan.
+
+| No | Komponen                               | Hasil Analisis                          |
+|----|----------------------------------------|-----------------------------------------|
+| 1  | Alamat IP sumber                       | `192.168.1.101`                         |
+| 2  | Alamat IP tujuan                       | `68.87.71.226`                          |
+| 3  | Nilai TTL awal yang diamati            | `128`                                   |
+| 4  | Protocol pada header IP                | `UDP (17)`                              |
+| 5  | Header length IPv4                     | `20 byte`                               |
+| 6  | Total length datagram                  | `57 byte`                               |
+| 7  | Identification                         | `15612`                                 |
+| 8  | Router yang mengirim ICMP TTL exceeded | Tidak ditemukan pada pcap yang dikirim. |
 
 ---
 
 ## Analisis Fragmentasi
 
-| Fragmen | Identification | Total Length | Flags | Fragment Offset | More Fragments | Keterangan |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 2 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 3 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
+Pada semua file pcap yang dikirim, tidak ditemukan paket IPv4 dengan `Fragment Offset` lebih dari 0 atau flag
+`More Fragments`. Artinya, bagian fragmentasi dari modul asli belum dapat diisi dari file yang tersedia.
 
-Fragmentasi terjadi ketika ukuran datagram lebih besar dari MTU jaringan. Datagram akan dibagi menjadi beberapa fragmen dengan nilai `Identification` yang sama, sedangkan `Fragment Offset` menunjukkan posisi fragmen dalam datagram asli.
+| Fragmen | Identification | Total Length   | Flags          | Fragment Offset | More Fragments | Keterangan                                     |
+|---------|----------------|----------------|----------------|-----------------|----------------|------------------------------------------------|
+| 1       | Tidak tersedia | Tidak tersedia | Tidak tersedia | Tidak tersedia  | Tidak tersedia | Tidak ada fragmen IPv4 pada pcap yang dikirim. |
+| 2       | Tidak tersedia | Tidak tersedia | Tidak tersedia | Tidak tersedia  | Tidak tersedia | Tidak ada fragmen IPv4 pada pcap yang dikirim. |
+| 3       | Tidak tersedia | Tidak tersedia | Tidak tersedia | Tidak tersedia  | Tidak tersedia | Tidak ada fragmen IPv4 pada pcap yang dikirim. |
+
+Fragmentasi terjadi ketika ukuran datagram lebih besar dari MTU jaringan. Namun, trace yang dikirim tidak memuat
+traceroute ukuran 3000 byte atau datagram IPv4 yang terfragmentasi.
 
 ---
 
 ## Analisis IPv6
 
-| No | Komponen IPv6 | Hasil Analisis |
-| --- | --- | --- |
-| 1 | Alamat IPv6 sumber | [isi dari Wireshark] |
-| 2 | Alamat IPv6 tujuan | [isi dari Wireshark] |
-| 3 | Traffic Class | [isi dari Wireshark] |
-| 4 | Flow Label | [isi dari Wireshark] |
-| 5 | Payload Length | [isi dari Wireshark] |
-| 6 | Next Header | [isi dari Wireshark] |
-| 7 | Hop Limit | [isi dari Wireshark] |
-| 8 | Query DNS AAAA | [isi dari Wireshark] |
+Sumber data IPv6 yang ditemukan berasal dari `NAT_ISP_side.pcap`, paket 65. Paket tersebut adalah UDP LLMNR ke multicast
+IPv6, bukan DNS AAAA untuk `youtube.com`.
+
+| No | Komponen IPv6      | Hasil Analisis                                                                          |
+|----|--------------------|-----------------------------------------------------------------------------------------|
+| 1  | Alamat IPv6 sumber | `fe80::d04:b072:4f6:f791`                                                               |
+| 2  | Alamat IPv6 tujuan | `ff02::1:3`                                                                             |
+| 3  | Traffic Class      | `0`                                                                                     |
+| 4  | Flow Label         | `0`                                                                                     |
+| 5  | Payload Length     | `34 byte`                                                                               |
+| 6  | Next Header        | `UDP (17)`                                                                              |
+| 7  | Hop Limit          | `1`                                                                                     |
+| 8  | Query DNS AAAA     | Tidak ditemukan. Paket IPv6 yang tersedia adalah LLMNR UDP port `5355`, bukan DNS AAAA. |
 
 ---
 
 ## Kesimpulan
 
-Traceroute memperlihatkan cara kerja TTL pada IP karena setiap router yang menerima paket dengan TTL habis akan mengembalikan pesan ICMP. Pada ukuran paket besar, IPv4 dapat mengalami fragmentasi. IPv6 memiliki struktur header yang berbeda dan menggunakan field seperti Flow Label dan Next Header untuk mendukung pemrosesan paket yang lebih sederhana.
+Traceroute memperlihatkan cara kerja TTL pada IP karena setiap router yang menerima paket dengan TTL habis akan
+mengembalikan pesan ICMP. Pada ukuran paket besar, IPv4 dapat mengalami fragmentasi. IPv6 memiliki struktur header yang
+berbeda dan menggunakan field seperti Flow Label dan Next Header untuk mendukung pemrosesan paket yang lebih sederhana.

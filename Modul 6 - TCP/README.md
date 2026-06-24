@@ -6,12 +6,6 @@ Kelas : IF-04-01
 
 ---
 
-## Struktur Folder
-
-1. `asset/` berisi gambar hasil screenshot Wireshark, browser, dan grafik TCP.
-2. `LIST_IMAGE.md` berisi daftar gambar yang perlu diganti dengan screenshot asli.
-
----
 
 ## Tujuan Praktikum
 
@@ -86,13 +80,15 @@ File yang dipakai: `tcp-ethereal-trace-1`.
 
 ## Analisis Awal Trace TCP
 
+Catatan: file yang tersedia tidak berisi trace upload `alice.txt` ke `gaia.cs.umass.edu`. Oleh karena itu, analisis di bawah memakai aliran HTTP POST yang ditemukan pada `NAT_home_side.pcap`, yaitu paket 4 sampai 14. Server pada trace ini adalah `74.125.91.113`, bukan `gaia.cs.umass.edu`.
+
 | No | Pertanyaan | Hasil Analisis |
 | --- | --- | --- |
-| 1 | Alamat IP client yang digunakan untuk transfer file | [isi dari Wireshark] |
-| 2 | Port TCP client | [isi dari Wireshark] |
-| 3 | Alamat IP `gaia.cs.umass.edu` | [isi dari Wireshark] |
-| 4 | Port TCP server | [isi dari Wireshark] |
-| 5 | Nomor paket yang memuat HTTP POST | [isi dari Wireshark] |
+| 1 | Alamat IP client yang digunakan untuk transfer file | `192.168.1.100` |
+| 2 | Port TCP client | `4330` |
+| 3 | Alamat IP `gaia.cs.umass.edu` | Tidak ditemukan pada pcap yang dikirim. Server HTTP yang dianalisis adalah `74.125.91.113`. |
+| 4 | Port TCP server | `80` |
+| 5 | Nomor paket yang memuat HTTP POST | Paket `7` pada `NAT_home_side.pcap`. |
 
 ---
 
@@ -100,15 +96,15 @@ File yang dipakai: `tcp-ethereal-trace-1`.
 
 | No | Komponen yang Dianalisis | Hasil Analisis |
 | --- | --- | --- |
-| 1 | Sequence number segmen SYN | [isi dari Wireshark] |
-| 2 | Flag yang menandai segmen SYN | [isi dari Wireshark] |
-| 3 | Sequence number segmen SYN-ACK | [isi dari Wireshark] |
-| 4 | Acknowledgement number pada SYN-ACK | [isi dari Wireshark] |
-| 5 | Sequence number segmen yang berisi HTTP POST | [isi dari Wireshark] |
-| 6 | Panjang enam segmen TCP pertama | [isi dari Wireshark] |
-| 7 | Minimum receive window / buffer penerima | [isi dari Wireshark] |
-| 8 | Ada atau tidaknya retransmission | [isi dari Wireshark] |
-| 9 | Throughput koneksi TCP | [isi dari Wireshark] |
+| 1 | Sequence number segmen SYN | `952809727`, paket 4. |
+| 2 | Flag yang menandai segmen SYN | `SYN`. |
+| 3 | Sequence number segmen SYN-ACK | `2709749795`, paket 5. |
+| 4 | Acknowledgement number pada SYN-ACK | `952809728`. |
+| 5 | Sequence number segmen yang berisi HTTP POST | `952809728`, paket 7. |
+| 6 | Panjang enam segmen TCP pertama | `0`, `0`, `0`, `981`, `6`, dan `799` byte payload untuk paket 4, 5, 6, 7, 10, dan 11. |
+| 7 | Minimum receive window / buffer penerima | `121` byte pada paket server ke client dalam flow yang sama. |
+| 8 | Ada atau tidaknya retransmission | Ada indikasi retransmission pada response `HTTP/1.1 200 OK`, karena paket 13 mengulang sequence number `2709749796` yang sudah muncul pada paket 11. |
+| 9 | Throughput koneksi TCP | Sekitar `4,6 KB/s` jika dihitung dari payload unik `1.786` byte selama sekitar `0,388` detik. Nilai ini tidak mewakili upload besar karena trace bukan file `alice.txt`. |
 
 ---
 
@@ -116,28 +112,28 @@ File yang dipakai: `tcp-ethereal-trace-1`.
 
 | Segmen | Sequence Number | Waktu Kirim | Waktu ACK Diterima | RTT | Estimated RTT | Panjang Segmen |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 2 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 3 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 4 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 5 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
-| 6 | [isi] | [isi] | [isi] | [isi] | [isi] | [isi] |
+| 1 | `952809727` | `1,140302 s` | `1,207818 s` | `0,067516 s` | `0,067516 s` | `0 byte` |
+| 2 | `2709749795` | `1,207818 s` | `1,207873 s` | `0,000055 s` | `0,059333 s` | `0 byte` |
+| 3 | `952809728` | `1,207873 s` | Tidak tersedia | Tidak tersedia | Tidak tersedia | `0 byte` |
+| 4 | `952809728` | `1,208040 s` | `1,269675 s` | `0,061635 s` | `0,059621 s` | `981 byte` |
+| 5 | `2709749796` | `1,269675 s` | Tidak tersedia | Tidak tersedia | Tidak tersedia | `6 byte` |
+| 6 | `2709749796` | `1,274062 s` | `1,474508 s` | `0,200446 s` | `0,077224 s` | `799 byte` |
 
 ---
 
 ## Analisis Congestion Control
 
-Time-Sequence Graph Stevens digunakan untuk melihat perubahan sequence number terhadap waktu. Jika titik-titik awal meningkat secara cepat, bagian tersebut dapat mengindikasikan fase slow start. Setelah kenaikan menjadi lebih stabil, koneksi biasanya mulai masuk ke congestion avoidance.
+Time-Sequence Graph Stevens digunakan untuk melihat perubahan sequence number terhadap waktu. Pada file `NAT_home_side.pcap`, aliran yang dianalisis hanya berisi HTTP POST kecil dan response HTTP, bukan transfer file besar. Karena itu, grafik congestion control tidak cukup kuat untuk menyimpulkan fase `slow start` dan `congestion avoidance`.
 
 | Komponen | Hasil Analisis |
 | --- | --- |
-| Awal slow start | [isi berdasarkan grafik] |
-| Akhir slow start | [isi berdasarkan grafik] |
-| Awal congestion avoidance | [isi berdasarkan grafik] |
-| Perbedaan grafik aktual dengan teori | [isi berdasarkan pengamatan] |
+| Awal slow start | Tidak dianalisis dari file yang tersedia. |
+| Akhir slow start | Tidak dianalisis dari file yang tersedia. |
+| Awal congestion avoidance | Tidak dianalisis dari file yang tersedia. |
+| Perbedaan grafik aktual dengan teori | File yang tersedia tidak memuat transfer TCP besar seperti modul asli, sehingga grafik tidak sebanding dengan teori congestion control pada upload file. |
 
 ---
 
 ## Kesimpulan
 
-Berdasarkan hasil capture, protokol TCP membangun koneksi dengan proses handshake, mengirim data menggunakan sequence number, dan memastikan data diterima melalui acknowledgement. Grafik TCP dapat digunakan untuk melihat pola pengiriman data dan memperkirakan perilaku congestion control selama proses upload file berlangsung.
+Berdasarkan hasil capture yang tersedia, protokol TCP membangun koneksi dengan proses handshake, mengirim data menggunakan sequence number, dan memastikan data diterima melalui acknowledgement. Namun, file pcap yang dianalisis bukan trace upload besar ke `gaia.cs.umass.edu`, sehingga bagian congestion control perlu divalidasi lagi menggunakan trace TCP resmi atau capture upload ulang.
